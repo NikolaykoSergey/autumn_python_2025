@@ -1,18 +1,34 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Редактировать задачу</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <h1>Редактировать задачу</h1>
-    <form method="POST" action="/edit/">
-        <input type="text" name="task" value="">
-        <select name="priority">
-            <option value="2">Высокий</option>
-            <option value="1">Средний</option>
-            <option value="0">Низкий</option>
-        </select>
-        <button type="submit">Save</button>
-    </form>
+
+    <ul>
+        <li class="{{ task['priority']|lower }}">
+            <div class="task-info" style="flex-grow:1; display:flex; flex-direction: column; gap:5px;">
+                <input type="text" name="task" value="{{ task['task'] }}" form="editForm" placeholder="Название задачи" required>
+                <input type="text" name="description" value="{{ task['description'] }}" form="editForm" placeholder="Описание">
+                <input type="date" name="start_date" value="{{ task['start_date'] }}" form="editForm" placeholder="Дата начала">
+                <select name="priority" form="editForm">
+                    <option value="Low" {% if task['priority']=='Low' %}selected{% endif %}>Низкий</option>
+                    <option value="Medium" {% if task['priority']=='Medium' %}selected{% endif %}>Средний</option>
+                    <option value="High" {% if task['priority']=='High' %}selected{% endif %}>Высокий</option>
+                </select>
+            </div>
+            <div class="actions">
+                <button class="btn" type="submit" form="editForm">Сохранить</button>
+                <a class="btn" href="{{ url_for('index') }}">Отмена</a>
+            </div>
+        </li>
+    </ul>
+
+    <!-- Скрытая форма для отправки данных -->
+    <form id="editForm" action="{{ url_for('edit', task_id=task_id) }}" method="POST"></form>
 </body>
 </html>
